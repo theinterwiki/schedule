@@ -1,0 +1,69 @@
+function updateSchedule() {
+
+  //App Script that opens the current email in the Inbox
+  //and replaces the contents of the Schedule.pdf file in this
+  //accounts Drive folder.
+
+  //If this needs to be fixed or modified, The Folder and File ID's 
+  //below will probably need to be replaced. Unless I have written the code
+  //in the failure areas immediately below.
+
+  //Either way, the working link will need to be replaced
+
+  var driveFolder = DriveApp.getFolderById("1yT-Tu02oSLsjzwe2yP4eOctYPLb_jDBB");
+  if (!driveFolder)
+  {
+    Logger.log("Drive Folder missing");
+    //Make code to recreate  Schedule Folder
+  }
+  var theFile = DriveApp.getFileById("1KNRteWjpz9GNyQeuBo4DhtHz_hCfcvf1");
+  if (!theFile)
+  {
+    Logger.log("File missing");
+    //Make code to recreate PDF file
+  } 
+  
+  var count = GmailApp.getInboxUnreadCount();
+  // Logger.log(`Messages unread in inbox: ${GmailApp.getInboxUnreadCount()}`);
+  if (count > 1)
+  {
+    //Error checking for spam etc...
+
+  }
+
+  //Get all the emails
+  var threads = GmailApp.getInboxThreads(0, 50);
+
+  //Check the unread  emails for one with a subject of schedule
+  for (let i = 0; i < threads.length; i++) {
+  var theSubject = threads[i].getFirstMessageSubject();  //get the subject of this thread
+  var theThread = threads[i];     //get the ID of this thread
+
+  if (theSubject != "schedule"){  //test
+    GmailApp.moveThreadToTrash(theThread);  //not the right subject, Delete!
+  }
+
+  else{
+    var messages = theThread.getMessages(); //this is a list of the messages in the thread. Assumed to be the only message
+    
+    var attachments = messages[0].getAttachments(); //Get the attachment of the first message
+
+    var theName = attachments[0].getName(); //Don't need the name, but good for error checking.
+
+    if (theName == "Schedule.pdf") //Is this the droid we're looking for?
+      {
+        var theBlob = attachments[0].copyBlob();    //Copy the attachment data
+
+        Drive.Files.update({}, "1KNRteWjpz9GNyQeuBo4DhtHz_hCfcvf1", theBlob); //Overwrite the existing file to preserve the sharing link.
+
+        GmailApp.moveThreadToTrash(theThread);  //Delete the email
+
+      }
+    
+    } // End the else
+
+  }  //End the iterating through the messages
+
+
+  }  //End of file
+
