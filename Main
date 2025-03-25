@@ -8,14 +8,22 @@ function updateSchedule() {
   //below will probably need to be replaced. Unless I have written the code
   //in the failure areas immediately below.
 
+  //Also, code to find the folders by name would be useful, 
+  //but the link depends on hard coding, so maybe not...
+
   //Either way, the working link will need to be replaced
+
+  //This script is backed up at https://github.com/theinterwiki/schedule
 
   var driveFolder = DriveApp.getFolderById("1yT-Tu02oSLsjzwe2yP4eOctYPLb_jDBB");
   if (!driveFolder)
   {
     Logger.log("Drive Folder missing");
-    //Make code to recreate  Schedule Folder
+    //Make code to recreate Schedule Folder
+    //Also the file. If the folder is missing, 
+    //then the file is also missing...
   }
+
   var theFile = DriveApp.getFileById("1KNRteWjpz9GNyQeuBo4DhtHz_hCfcvf1");
   if (!theFile)
   {
